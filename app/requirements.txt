@@ -2,26 +2,25 @@
 streamlit==1.32.0
 
 # LangChain
-langchain==0.1.12
-langchain-community==0.0.28
+langchain==0.1.20
+langchain-community==0.0.38
 
-# Vector Database - NEW VERSION ✅
+# Vector Database
 chromadb==0.5.23
 
-# LLM
-ollama==0.1.7
-
-# Fix httpx conflict
-httpx==0.25.2
+# LLM - Updated version ✅
+ollama==0.3.3
 
 # Document Loaders
 pypdf==4.1.0
 
 # Embeddings
-sentence-transformers==2.5.1
+sentence-transformers==2.7.0
 
 # Utilities
 python-dotenv==1.0.1
 watchdog==4.0.0
 pandas==2.2.1
 requests==2.31.0
+
+# Let pip choose httpx automatically (remove pin)
