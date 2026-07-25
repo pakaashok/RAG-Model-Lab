@@ -27,16 +27,53 @@ class DocumentIngester:
         self.chroma_client = self._setup_chromadb()
 
     def _setup_chromadb(self):
-        """Setup ChromaDB with v2 API"""
+        """Setup ChromaDB with tenant"""
         try:
+            # Step 1: Connect as admin client
+            admin_client = chromadb.AdminClient(
+                chromadb.Settings(
+                    chroma_api_impl="chromadb.api.fastapi.FastAPI",
+                    chroma_server_host=settings.CHROMA_HOST,
+                    chroma_server_http_port=settings.CHROMA_PORT
+                )
+            )
+
+            # Step 2: Create tenant if not exists
+            try:
+                admin_client.get_tenant(
+                    name="default_tenant"
+                )
+                print("✅ Tenant exists!")
+            except Exception:
+                admin_client.create_tenant(
+                    name="default_tenant"
+                )
+                print("✅ Tenant created!")
+
+            # Step 3: Create database if not exists
+            try:
+                admin_client.get_database(
+                    name="default_database",
+                    tenant="default_tenant"
+                )
+                print("✅ Database exists!")
+            except Exception:
+                admin_client.create_database(
+                    name="default_database",
+                    tenant="default_tenant"
+                )
+                print("✅ Database created!")
+
+            # Step 4: Connect as regular client
             client = chromadb.HttpClient(
                 host=settings.CHROMA_HOST,
-                port=settings.CHROMA_PORT
+                port=settings.CHROMA_PORT,
+                tenant="default_tenant",
+                database="default_database"
             )
-            # Test connection
-            client.heartbeat()
             print("✅ ChromaDB connected!")
             return client
+
         except Exception as e:
             print(f"❌ ChromaDB error: {e}")
             raise e
@@ -44,13 +81,11 @@ class DocumentIngester:
     def load_documents(self, directory: str) -> list:
         """Load multiple document types"""
         documents = []
-
         loaders = {
             "**/*.pdf": PyPDFLoader,
             "**/*.txt": TextLoader,
             "**/*.csv": CSVLoader,
         }
-
         for glob_pattern, loader_cls in loaders.items():
             try:
                 loader = DirectoryLoader(
@@ -68,7 +103,6 @@ class DocumentIngester:
                     )
             except Exception as e:
                 print(f"⚠️ Error loading: {e}")
-
         return documents
 
     def ingest(
@@ -108,7 +142,6 @@ class DocumentIngester:
                     0.6,
                     "🔢 Creating embeddings..."
                 )
-
             Chroma.from_documents(
                 documents=chunks,
                 embedding=self.embeddings,

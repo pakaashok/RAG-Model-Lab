@@ -1,5 +1,6 @@
 import os
 import requests
+import chromadb
 from config.settings import settings
 
 def check_ollama_connection() -> bool:
@@ -16,15 +17,25 @@ def check_ollama_connection() -> bool:
 def check_chromadb_connection() -> bool:
     """Check if ChromaDB is running"""
     try:
-        import chromadb
         client = chromadb.HttpClient(
             host=settings.CHROMA_HOST,
-            port=settings.CHROMA_PORT
+            port=settings.CHROMA_PORT,
+            tenant="default_tenant",
+            database="default_database"
         )
         client.heartbeat()
         return True
-    except:
-        return False
+    except Exception:
+        # Try without tenant
+        try:
+            response = requests.get(
+                f"http://{settings.CHROMA_HOST}:"
+                f"{settings.CHROMA_PORT}/api/v2/heartbeat",
+                timeout=5
+            )
+            return response.status_code == 200
+        except:
+            return False
 
 def get_available_models() -> list:
     """Get list of available Ollama models"""
