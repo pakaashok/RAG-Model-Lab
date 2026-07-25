@@ -1,0 +1,26 @@
+# Artificial Intelligence Basics
+
+Artificial Intelligence (AI) is the simulation of human
+intelligence by machines.
+
+## Types of AI
+1. Narrow AI - Designed for specific tasks
+2. General AI - Human-level intelligence
+3. Super AI - Beyond human intelligence
+
+## Machine Learning
+Machine Learning is a subset of AI that learns from data
+without being explicitly programmed.
+
+## Deep Learning
+Deep Learning uses neural networks with many layers
+to learn complex patterns from large amounts of data.
+
+## RAG (Retrieval Augmented Generation)
+RAG is a technique that combines information retrieval
+with text generation to produce accurate responses.
+
+## Large Language Models
+Large Language Models (LLMs) are AI models trained on
+large amounts of text data to understand and generate
+human language.
