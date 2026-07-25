@@ -5,14 +5,11 @@ streamlit==1.32.0
 langchain==0.1.12
 langchain-community==0.0.28
 
-# Vector Database - Updated version! ✅
-chromadb==0.6.0
+# Vector Database
+chromadb==0.5.0
 
-# LLM
-ollama==0.1.7
-
-# Google Gemini (for later)
-# langchain-google-genai==0.0.11
+# LLM - Updated version ✅
+ollama==0.2.1
 
 # Document Loaders
 pypdf==4.1.0
@@ -25,3 +22,6 @@ python-dotenv==1.0.1
 watchdog==4.0.0
 pandas==2.2.1
 requests==2.31.0
+
+# HTTP client
+httpx==0.27.0
