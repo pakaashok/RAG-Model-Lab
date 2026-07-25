@@ -1,0 +1,174 @@
+# GitHub and Git for DevOps
+
+## Git Basics
+
+### Core Commands
+- git init          Initialize repository
+- git clone         Clone repository
+- git add           Stage changes
+- git commit        Save changes
+- git push          Upload to remote
+- git pull          Download from remote
+- git fetch         Fetch without merge
+- git merge         Merge branches
+- git rebase        Rebase commits
+- git stash         Save work temporarily
+- git log           View commit history
+- git diff          Show changes
+- git reset         Undo changes
+- git revert        Revert commits
+
+### Branching Strategy
+
+Main Branches:
+- main or master  Production code
+- develop         Development code
+
+Supporting Branches:
+- feature/name    New features
+- bugfix/name     Bug fixes
+- hotfix/name     Production fixes
+- release/name    Release preparation
+
+## GitHub Features
+
+### Pull Requests
+- Code review process
+- Required reviewers
+- Branch protection rules
+- Auto merge options
+- Draft pull requests
+- Comments and suggestions
+
+### GitHub Actions
+Automated workflows triggered by events
+
+Example workflow:
+name: CI Pipeline
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        run: make build
+      - name: Test
+        run: make test
+
+### Branch Protection Rules
+- Require pull request reviews
+- Require status checks
+- Require linear history
+- Restrict who can push
+- Require signed commits
+- Include administrators
+
+### GitHub Secrets
+- Store sensitive information
+- Used in GitHub Actions
+- Organization level secrets
+- Repository level secrets
+- Environment secrets
+- Never commit to repo
+
+### GitHub Environments
+- Development
+- Staging
+- Production
+- Required reviewers
+- Deployment protection rules
+- Environment secrets
+
+## GitOps with GitHub
+
+### ArgoCD Integration
+- Sync Kubernetes with GitHub
+- Auto deploy on git push
+- Drift detection
+- Rollback capabilities
+
+### Terraform with GitHub
+1. Store Terraform code in GitHub
+2. Trigger pipeline on PR
+3. Run terraform plan on PR
+4. Comment plan output on PR
+5. Run terraform apply on merge
+
+### Flux Integration
+- GitOps for Kubernetes
+- Watches Git repository
+- Applies changes automatically
+- Reconciles state
+
+## GitHub Best Practices
+
+### Repository Setup
+1. Add descriptive README
+2. Include LICENSE file
+3. Add CONTRIBUTING.md
+4. Setup CODEOWNERS
+5. Configure .gitignore
+6. Add issue templates
+7. Add PR templates
+
+### Security Best Practices
+1. Never commit secrets
+2. Use GitHub Secrets
+3. Enable 2FA
+4. Use signed commits
+5. Enable Dependabot
+6. Setup code scanning
+7. Review dependencies
+
+### Commit Message Convention
+Use conventional commits:
+- feat: new feature
+- fix: bug fix
+- docs: documentation
+- style: formatting
+- refactor: code restructure
+- test: adding tests
+- chore: maintenance
+- ci: CI changes
+
+Example:
+feat: add user authentication
+fix: resolve login bug
+docs: update README
+
+### Workflow Best Practices
+1. Keep PRs small and focused
+2. Write meaningful commit messages
+3. Use branch protection rules
+4. Tag releases properly
+5. Review code carefully
+6. Test before merging
+7. Use semantic versioning
+
+## GitHub Actions Advanced
+
+### Matrix Builds
+Run same job with different configs:
+strategy:
+  matrix:
+    node: [14, 16, 18]
+    os: [ubuntu-latest, macos-latest]
+
+### Reusable Workflows
+Share workflows across repos:
+uses: org/repo/.github/workflows/build.yml@main
+
+### Self Hosted Runners
+- Run on your infrastructure
+- Custom hardware
+- Access to private resources
+- More control
+
+### Marketplace Actions
+- Pre built actions
+- Community maintained
+- Official actions from vendors
+- Verified creators

@@ -1,0 +1,172 @@
+# AWS Services for DevOps
+
+## Compute Services
+
+### EC2 Elastic Compute Cloud
+- Virtual servers in the cloud
+- Instance types: t2, t3, m5, c5, r5, g4
+- Key features:
+  * Auto Scaling Groups for scaling
+  * Load Balancers for distribution
+  * Security Groups for firewall
+  * Key Pairs for SSH access
+  * EBS volumes for storage
+  * Elastic IPs for static IPs
+
+### ECS Elastic Container Service
+- Managed container orchestration
+- Run Docker containers on AWS
+- Launch types:
+  * EC2 launch type self managed
+  * Fargate serverless
+- Task Definitions define containers
+- Services manage tasks
+
+### EKS Elastic Kubernetes Service
+- Managed Kubernetes on AWS
+- Handles control plane automatically
+- Integrates with AWS services
+- Node groups for worker nodes
+- Fargate profiles for serverless pods
+
+### Lambda
+- Serverless compute
+- Run code without servers
+- Triggered by events
+- Pay per execution
+- Supports Python Node.js Java Go .NET
+- Max 15 minute execution time
+- 10GB memory limit
+
+## Storage Services
+
+### S3 Simple Storage Service
+- Object storage service
+- Use cases:
+  * Static website hosting
+  * Terraform state storage
+  * Backup and archive
+  * Log storage
+  * Data lake
+- Storage classes:
+  * Standard for frequent access
+  * Standard IA for infrequent access
+  * Glacier for long term archival
+  * Deep Archive for cheapest storage
+
+### EBS Elastic Block Store
+- Block storage for EC2 instances
+- Types:
+  * gp2 gp3 General Purpose SSD
+  * io1 io2 Provisioned IOPS SSD
+  * st1 Throughput Optimized HDD
+  * sc1 Cold HDD
+
+### EFS Elastic File System
+- Managed NFS file system
+- Shared storage for multiple EC2
+- Automatic scaling
+
+## Networking Services
+
+### VPC Virtual Private Cloud
+- Isolated network in AWS
+- Components:
+  * Subnets Public and Private
+  * Route Tables
+  * Internet Gateway
+  * NAT Gateway
+  * Security Groups stateful
+  * NACLs stateless
+  * VPC Endpoints
+  * VPC Peering
+
+### Route 53
+- DNS service
+- Health checking
+- Traffic routing policies
+
+### CloudFront
+- Content Delivery Network CDN
+- Global edge locations
+- Reduces latency
+- DDoS protection
+
+## DevOps Services
+
+### CodePipeline
+- CI CD pipeline service
+- Integrates with GitHub
+- Triggers on code changes
+
+### CodeBuild
+- Build service
+- Compiles source code
+- Runs unit tests
+- Creates artifacts
+
+### CodeDeploy
+- Deployment service
+- Supports EC2 Lambda ECS
+- Deployment strategies In place and Blue Green
+
+### ECR Elastic Container Registry
+- Docker image registry
+- Private container registry
+- Integrates with ECS EKS
+
+## Monitoring Services
+
+### CloudWatch
+- Monitoring and observability
+- Features:
+  * Metrics for CPU Memory etc
+  * Logs aggregation
+  * Alarms for notifications
+  * Dashboards for visualization
+  * Events for automation
+
+### CloudTrail
+- API activity logging
+- Security auditing
+- Compliance tracking
+
+## Security Services
+
+### IAM Identity Access Management
+- Users Groups Roles
+- Policies for permissions
+- Best practices:
+  * Use principle of least privilege
+  * Use roles instead of users
+  * Enable MFA for all users
+  * Rotate credentials regularly
+
+### Secrets Manager
+- Store sensitive data
+- Auto rotate secrets
+- Integrate with services
+
+### KMS Key Management Service
+- Encryption key management
+- Encrypt data at rest
+- Integrates with AWS services
+
+## Database Services
+
+### RDS Relational Database Service
+- Managed relational databases
+- Supports MySQL PostgreSQL Oracle SQL Server
+- Automated backups
+- Multi AZ deployment
+
+### DynamoDB
+- NoSQL database
+- Serverless
+- Auto scaling
+- Global tables
+
+### ElastiCache
+- In memory cache
+- Redis and Memcached
+- Sub millisecond latency

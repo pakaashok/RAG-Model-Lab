@@ -1,0 +1,248 @@
+# Linux OS for DevOps
+
+## Essential Commands
+
+### File Operations
+- ls -la          List files with details
+- cd path         Change directory
+- pwd             Print working directory
+- cp src dst      Copy files
+- mv src dst      Move or rename files
+- rm -rf dir      Remove directory forcefully
+- mkdir -p dir    Create directory with parents
+- chmod 755 file  Change permissions
+- chown user file Change ownership
+- find path       Find files by criteria
+- locate file     Quick file search
+- touch file      Create empty file
+
+### File Content
+- cat file        View entire file content
+- less file       Page through file
+- head -n file    View first n lines
+- tail -f file    Follow file for logs
+- grep pattern    Search in files
+- sed             Edit files in place
+- awk             Process text files
+- wc -l           Count lines
+- sort            Sort lines
+- uniq            Remove duplicates
+
+### Process Management
+- ps aux          List all processes
+- top             Monitor processes
+- htop            Better process monitor
+- kill PID        Kill process by ID
+- killall name    Kill by name
+- systemctl start Start service
+- systemctl stop  Stop service
+- systemctl status Check service status
+- systemctl enable Enable at boot
+- journalctl -f   Follow system logs
+- nohup cmd       Run in background
+
+### Network Commands
+- ip addr         Show network interfaces
+- netstat -tulpn  Show open ports
+- ss -tulpn       Socket statistics
+- ping host       Test connectivity
+- curl URL        HTTP requests
+- wget URL        Download files
+- ssh user host   Remote connection
+- scp src dst     Secure copy
+- nmap host       Port scanning
+- traceroute      Trace network path
+- dig domain      DNS lookup
+
+### Disk Management
+- df -h           Disk usage summary
+- du -sh dir      Directory size
+- lsblk           List block devices
+- mount           Mount filesystems
+- umount          Unmount filesystems
+- fdisk -l        List partitions
+
+### Package Management
+
+Debian Ubuntu commands:
+- apt update      Update package list
+- apt upgrade     Upgrade packages
+- apt install     Install package
+- apt remove      Remove package
+- apt search      Search packages
+
+RedHat CentOS commands:
+- yum update      Update packages
+- yum install     Install package
+- yum remove      Remove package
+- dnf             Newer yum replacement
+
+## Shell Scripting Basics
+
+Sample script structure:
+Script starts with shebang line
+Set variables
+Add error handling
+Include comments
+
+Common patterns:
+- Variables with NAME assignment
+- If else conditions for logic
+- For loops for iteration
+- Functions for reusable code
+- Exit codes for status
+
+### Script Best Practices
+1. Always use shebang line
+2. Set error handling flags
+3. Use meaningful variable names
+4. Add comments for clarity
+5. Handle errors properly
+6. Use functions for reusability
+7. Validate inputs
+8. Log important actions
+
+## System Administration
+
+### User Management
+- useradd username    Add user
+- passwd username     Set password
+- usermod             Modify user
+- userdel username    Delete user
+- groups username     Show groups
+- id username         User info
+- who                 Logged in users
+- last                Login history
+
+### Permissions
+Permission types:
+- r read permission
+- w write permission
+- x execute permission
+
+Permission numbers:
+- 4 read
+- 2 write
+- 1 execute
+- 7 all permissions
+- 755 owner all others rx
+- 644 owner rw others r
+- 600 owner rw only
+
+### Cron Jobs
+Cron format: minute hour day month weekday
+
+Examples:
+- Every hour job runs at minute zero
+- Every day job runs at midnight
+- Every week job runs Sunday
+- Every 5 minutes with slash notation
+
+Cron files:
+- etc crontab system wide
+- User crontab per user
+- etc cron daily scripts
+
+### Performance Tuning
+- Monitor with top or htop
+- Check memory with free -h
+- Check disk with iostat
+- Check network with nethogs
+- Check CPU with mpstat
+- View logs with journalctl
+
+## Docker on Linux
+
+### Docker Commands
+- docker ps           List containers
+- docker images       List images
+- docker logs         View logs
+- docker exec         Execute in container
+- docker stats        Resource usage
+- docker build        Build image
+- docker run          Run container
+- docker stop         Stop container
+- docker rm           Remove container
+- docker rmi          Remove image
+- docker pull         Download image
+- docker push         Upload image
+- docker network      Manage networks
+- docker volume       Manage volumes
+
+## Systemd Services
+
+### Service Management
+- systemctl status service
+- systemctl start service
+- systemctl stop service
+- systemctl restart service
+- systemctl enable service
+- systemctl disable service
+- systemctl reload service
+
+### Service Files
+Located in etc systemd system
+Contains Unit Service Install sections
+Defines how service runs
+Handles dependencies
+Auto restart configuration
+
+## Security Basics
+
+### Firewall
+UFW commands:
+- ufw enable
+- ufw disable
+- ufw status
+- ufw allow port
+- ufw deny port
+- ufw allow from IP
+
+### SELinux
+- getenforce         Check status
+- setenforce 0       Permissive mode
+- setenforce 1       Enforcing mode
+- semanage           Manage policy
+
+### SSH Security
+1. Disable root login
+2. Use SSH keys only
+3. Change default port
+4. Use fail2ban
+5. Limit user access
+6. Enable logging
+
+## Text Processing
+
+### Grep Examples
+- grep pattern file
+- grep -r recursive
+- grep -i case insensitive
+- grep -v invert match
+- grep -c count matches
+
+### Sed Examples
+- sed replace text
+- sed delete lines
+- sed insert lines
+- sed print specific lines
+
+### Awk Examples
+- awk print columns
+- awk with conditions
+- awk calculations
+- awk with delimiters
+
+## Environment Variables
+
+Common variables:
+- PATH executable paths
+- HOME user home directory
+- USER current user
+- SHELL current shell
+- PWD current directory
+
+Setting variables:
+- export NAME=value
+- Add to bashrc for persistence
+- Add to profile for login shells

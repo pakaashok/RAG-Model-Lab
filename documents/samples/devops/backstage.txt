@@ -1,0 +1,240 @@
+# Backstage Developer Portal
+
+## What is Backstage?
+Backstage is an open source developer portal
+created by Spotify. It centralizes all your
+infrastructure tooling services and documentation
+in one place for developers.
+
+## Core Features
+
+### Software Catalog
+- Central registry of all services
+- Track ownership and metadata
+- Discover existing components
+- Component types:
+  * Service backend or frontend
+  * Website public facing sites
+  * Library reusable code
+  * Pipeline CI CD workflows
+  * Infrastructure cloud resources
+  * Documentation TechDocs
+
+### TechDocs
+- Documentation as code
+- Write docs in Markdown
+- Auto generates documentation site
+- Versioned with code
+- Uses MkDocs under the hood
+- Supports diagrams
+- Search functionality
+
+### Software Templates
+- Self service for developers
+- Create new services and repos
+- Standardize best practices
+- Scaffolder templates
+- Reduces onboarding time
+- Enforces standards
+
+### Plugins
+- Extend Backstage functionality
+- Available plugins:
+  * GitHub Actions
+  * ArgoCD
+  * Kubernetes
+  * PagerDuty
+  * SonarQube
+  * Jenkins
+  * AWS services
+  * Harness
+  * Terraform
+  * Datadog
+  * Prometheus
+
+## Backstage Architecture
+
+### Components
+1. Frontend React application
+2. Backend Node.js application
+3. Database PostgreSQL
+4. Plugins additional features
+5. Auth authentication providers
+
+### Catalog Entity Example
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: my-service
+  description: My microservice
+  tags:
+    - nodejs
+    - aws
+  annotations:
+    github.com/project-slug: org/repo
+spec:
+  type: service
+  lifecycle: production
+  owner: team-devops
+  system: payment-system
+
+### Entity Kinds
+1. Component - Software units
+2. API - Service APIs
+3. Resource - Infrastructure
+4. System - Group of components
+5. Domain - Business domain
+6. Group - Team or organization
+7. User - Individual users
+8. Location - Where entities are
+
+## Integration with DevOps Tools
+
+### GitHub Integration
+- Auto discover catalog files
+- Show GitHub Actions status
+- Link repos to catalog
+- View pull requests
+- View releases
+- Show contributors
+
+### Kubernetes Integration
+- View pod status
+- Check deployments
+- Monitor services
+- View logs
+- Resource utilization
+- Multi cluster support
+
+### Harness Integration
+- View pipeline status
+- Track deployments
+- Monitor services
+- View execution history
+- Rollback capabilities
+
+### Terraform Integration
+- Track infrastructure
+- View resource status
+- Cost monitoring
+- Drift detection
+- State management
+
+### AWS Integration
+- View EC2 instances
+- S3 buckets
+- Lambda functions
+- ECS services
+- CloudWatch metrics
+
+## Backstage Setup
+
+### Prerequisites
+- Node.js 18 or higher
+- Yarn package manager
+- Docker for local development
+- PostgreSQL database
+- Git
+
+### Installation Steps
+1. Install Node.js
+2. Create Backstage app using npx
+3. Configure app-config.yaml
+4. Add integrations
+5. Setup authentication
+6. Deploy to Kubernetes
+
+### Configuration File
+app-config.yaml contains:
+- App metadata
+- Backend configuration
+- Database settings
+- Auth providers
+- Integrations
+- Plugin configuration
+- CORS settings
+
+## Backstage Best Practices
+
+### Catalog Management
+1. Keep catalog files updated
+2. Document all services
+3. Use consistent naming
+4. Assign clear ownership
+5. Use tags for filtering
+6. Regular audits of catalog
+7. Automate catalog updates
+
+### Documentation
+1. Write clear README files
+2. Use TechDocs consistently
+3. Include architecture diagrams
+4. Document APIs properly
+5. Keep docs in sync with code
+6. Use consistent style
+
+### Templates
+1. Create templates for common patterns
+2. Include CI CD by default
+3. Add security scanning
+4. Include documentation template
+5. Set up monitoring
+6. Enforce naming conventions
+
+## Backstage Plugins Deep Dive
+
+### Cost Insights Plugin
+- Show cloud costs
+- Cost breakdown by service
+- Budget alerts
+- Historical trends
+
+### TechInsights Plugin
+- Track engineering metrics
+- Scorecards for services
+- Best practice checks
+- Compliance tracking
+
+### Search Plugin
+- Search across catalog
+- Search documentation
+- Search API definitions
+- Full text search
+
+## Common Use Cases
+
+### Service Onboarding
+1. Developer creates new service
+2. Uses Backstage template
+3. Repo created automatically
+4. CI CD configured
+5. Docs generated
+6. Monitoring setup
+
+### Service Discovery
+1. Search for existing services
+2. View documentation
+3. Check dependencies
+4. Find owners
+5. Report issues
+
+### Dependency Management
+1. Track service dependencies
+2. Visualize architecture
+3. Impact analysis
+4. Version tracking
+
+## Deployment Options
+
+### Self Hosted
+- Deploy on Kubernetes
+- Full control
+- Custom plugins
+- Data stays private
+
+### Managed Services
+- Roadie hosted Backstage
+- Spotify Portal
+- Frontside managed
+- Reduces maintenance

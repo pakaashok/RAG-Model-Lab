@@ -1,0 +1,92 @@
+# Harness CI/CD Platform
+
+## What is Harness?
+Harness is a modern software delivery platform that
+provides Continuous Integration and Continuous Delivery
+(CI/CD) capabilities with AI-powered features.
+
+## Key Components
+1. Pipelines - Automated workflows for building,
+   testing and deploying applications
+2. Stages - Individual phases within a pipeline
+   (Build, Test, Deploy)
+3. Steps - Individual tasks within a stage
+4. Connectors - Integrations with external tools
+5. Delegates - Harness agents running in your
+   infrastructure
+
+## Pipeline Structure
+Pipeline
+- Stage 1: Build
+  - Step 1: Git Clone
+  - Step 2: Build Docker Image
+  - Step 3: Push to Registry
+- Stage 2: Deploy
+  - Step 1: Deploy to Kubernetes
+  - Step 2: Health Check
+  - Step 3: Rollback if failed
+
+## Harness Delegate
+- Runs in your infrastructure
+- Executes pipeline tasks
+- Connects Harness to your environment
+- Can run on Kubernetes, Docker, VM
+- Types: Kubernetes Delegate, Docker Delegate,
+  Shell Script Delegate
+
+## Key Features
+1. AI-powered rollbacks
+2. Feature Flags management
+3. Cloud Cost Management
+4. Service Reliability Management
+5. Chaos Engineering
+6. Security Testing Orchestration
+7. Infrastructure as Code Management
+
+## Pipeline YAML Example
+pipeline:
+  name: Deploy Application
+  stages:
+    - stage:
+        name: Build
+        type: CI
+        spec:
+          steps:
+            - step:
+                name: Build Docker
+                type: BuildAndPushDockerRegistry
+
+## Harness Variables
+- Account level variables
+- Organization level variables
+- Project level variables
+- Pipeline level variables
+- Stage level variables
+- Secrets for sensitive data
+
+## Deployment Strategies
+1. Rolling Deployment - Gradual replacement
+2. Blue Green Deployment - Two environments
+3. Canary Deployment - Percentage-based rollout
+4. Custom Deployment - Your own strategy
+
+## Triggers
+1. Webhook triggers (GitHub, GitLab, Bitbucket)
+2. Schedule triggers (Cron expressions)
+3. Artifact triggers (New image pushed)
+4. Manifest triggers (Config changes)
+
+## Approval Steps
+- Manual approvals from users
+- JIRA approvals
+- ServiceNow approvals
+- Custom approval webhooks
+
+## Harness Modules
+1. CI (Continuous Integration)
+2. CD (Continuous Delivery)
+3. Feature Flags
+4. Cloud Cost Management
+5. Security Testing
+6. Chaos Engineering
+7. Service Reliability Management

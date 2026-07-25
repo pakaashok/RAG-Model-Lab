@@ -1,0 +1,139 @@
+# Terraform Infrastructure as Code
+
+## What is Terraform?
+Terraform is an open-source Infrastructure as Code
+tool by HashiCorp that lets you define and provision
+infrastructure using declarative configuration files.
+
+## Key Concepts
+
+### Providers
+Plugins that interact with cloud APIs
+
+provider "aws" {
+  region = "us-east-1"
+}
+
+Common providers:
+- aws
+- azurerm
+- google
+- kubernetes
+- helm
+
+### Resources
+Infrastructure components to create
+
+resource "aws_instance" "web" {
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t2.micro"
+  tags = {
+    Name = "WebServer"
+  }
+}
+
+### Variables
+Input parameters for configurations
+
+variable "instance_type" {
+  default     = "t2.micro"
+  description = "EC2 instance type"
+  type        = string
+}
+
+### Outputs
+Return values from configurations
+
+output "instance_ip" {
+  value = aws_instance.web.public_ip
+}
+
+### State
+Terraform tracks infrastructure in state file
+- terraform.tfstate is the state file
+- Stores current infrastructure state
+- Should be stored remotely in S3
+- Locked with DynamoDB to prevent conflicts
+
+### Modules
+Reusable infrastructure components
+
+module "vpc" {
+  source = "./modules/vpc"
+  cidr   = "10.0.0.0/16"
+}
+
+### Data Sources
+Read information from providers
+
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"]
+}
+
+## Terraform Commands
+- terraform init     - Initialize working directory
+- terraform plan     - Preview changes
+- terraform apply    - Apply changes
+- terraform destroy  - Destroy infrastructure
+- terraform validate - Validate configuration
+- terraform fmt      - Format configuration
+- terraform output   - Show outputs
+- terraform state    - Manage state
+- terraform import   - Import existing resources
+- terraform refresh  - Update state
+- terraform workspace - Manage workspaces
+
+## Terraform Workflow
+1. Write configuration files (.tf)
+2. Run terraform init
+3. Run terraform plan
+4. Review changes carefully
+5. Run terraform apply
+6. Infrastructure created!
+7. Store state remotely
+8. Version control your code
+
+## Remote State with S3
+terraform {
+  backend "s3" {
+    bucket         = "my-terraform-state"
+    key            = "prod/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "terraform-locks"
+  }
+}
+
+## Terraform Modules Best Practices
+1. Use modules for reusable code
+2. Version your modules with tags
+3. Use remote state always
+4. Use workspaces for environments
+5. Always run plan before apply
+6. Use variables and outputs properly
+7. Follow naming conventions
+8. Document your modules
+9. Use terraform-docs for documentation
+10. Use tflint for validation
+
+## Terraform Workspaces
+- Manage multiple environments
+- Commands:
+  * terraform workspace new dev
+  * terraform workspace select dev
+  * terraform workspace list
+
+## Terraform vs Other IaC
+- Terraform: Multi-cloud, declarative
+- CloudFormation: AWS only, declarative
+- Pulumi: Uses programming languages
+- Ansible: Configuration management
+- ARM Templates: Azure only
+
+## Common Patterns
+1. Environment separation with workspaces
+2. Module composition for reusability
+3. Remote state with locking
+4. Version pinning for stability
+5. Secret management with Vault or SSM
