@@ -6,7 +6,9 @@ from langchain.prompts import PromptTemplate
 from config.settings import settings
 import chromadb
 
+
 class RAGRetriever:
+
     def __init__(self):
         self.embeddings = OllamaEmbeddings(
             base_url=settings.OLLAMA_HOST,
@@ -21,9 +23,7 @@ class RAGRetriever:
         self.chain = self._setup_chain()
 
     def _setup_chromadb(self):
-        """Setup ChromaDB with tenant"""
         try:
-            # Step 1: Connect as admin client
             admin_client = chromadb.AdminClient(
                 chromadb.Settings(
                     chroma_api_impl="chromadb.api.fastapi.FastAPI",
@@ -31,62 +31,38 @@ class RAGRetriever:
                     chroma_server_http_port=settings.CHROMA_PORT
                 )
             )
-
-            # Step 2: Create tenant if not exists
             try:
-                admin_client.get_tenant(
-                    name="default_tenant"
-                )
-                print("✅ Tenant exists!")
+                admin_client.get_tenant(name="default_tenant")
+                print("Tenant exists")
             except Exception:
-                admin_client.create_tenant(
-                    name="default_tenant"
-                )
-                print("✅ Tenant created!")
-
-            # Step 3: Create database if not exists
+                admin_client.create_tenant(name="default_tenant")
+                print("Tenant created")
             try:
                 admin_client.get_database(
                     name="default_database",
                     tenant="default_tenant"
                 )
-                print("✅ Database exists!")
+                print("Database exists")
             except Exception:
                 admin_client.create_database(
                     name="default_database",
                     tenant="default_tenant"
                 )
-                print("✅ Database created!")
-
-            # Step 4: Connect as regular client
+                print("Database created")
             client = chromadb.HttpClient(
                 host=settings.CHROMA_HOST,
                 port=settings.CHROMA_PORT,
                 tenant="default_tenant",
                 database="default_database"
             )
-            print("✅ ChromaDB connected!")
+            print("ChromaDB connected")
             return client
-
         except Exception as e:
-            print(f"❌ ChromaDB error: {e}")
+            print("ChromaDB error: " + str(e))
             raise e
 
     def _setup_chain(self):
-        """Setup RAG chain"""
-        prompt_template = """
-        You are a helpful assistant.
-        Use the context below to answer the question.
-        If answer is not in context, say
-        "I cannot find this in the documents."
-
-        Context:
-        {context}
-
-        Question: {question}
-
-        Answer:
-        """
+        prompt_template = "You are a helpful assistant.\nUse the context below to answer the question.\nIf answer is not in context say I cannot find this in the documents.\n\nContext:\n{context}\n\nQuestion: {question}\n\nAnswer:"
 
         prompt = PromptTemplate(
             template=prompt_template,
@@ -112,19 +88,28 @@ class RAGRetriever:
             chain_type_kwargs={"prompt": prompt}
         )
 
-    def query(self, question: str) -> dict:
-        """Query the RAG system"""
+    def query(self, question):
         try:
             result = self.chain.invoke(
                 {"query": question}
             )
-            sources = [
-                {
-                    "content": doc.page_content,
-                    "source": doc.metadata.get(
-                        "source", "Unknown"
-                    ),
-                    "page": doc.metadata.get(
-                        "page", "N/A"
-                    )
-                    
+            sources = []
+            for doc in result.get("source_documents", []):
+                sources.append(
+                    {
+                        "content": doc.page_content,
+                        "source": doc.metadata.get("source", "Unknown"),
+                        "page": doc.metadata.get("page", "N/A")
+                    }
+                )
+            return {
+                "success": True,
+                "answer": result["result"],
+                "sources": sources
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e)
+            }
+            
