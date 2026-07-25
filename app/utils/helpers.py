@@ -16,13 +16,13 @@ def check_ollama_connection() -> bool:
 def check_chromadb_connection() -> bool:
     """Check if ChromaDB is running"""
     try:
-        # Updated to v2 API ✅
-        response = requests.get(
-            f"http://{settings.CHROMA_HOST}:"
-            f"{settings.CHROMA_PORT}/api/v2/heartbeat",
-            timeout=5
+        import chromadb
+        client = chromadb.HttpClient(
+            host=settings.CHROMA_HOST,
+            port=settings.CHROMA_PORT
         )
-        return response.status_code == 200
+        client.heartbeat()
+        return True
     except:
         return False
 

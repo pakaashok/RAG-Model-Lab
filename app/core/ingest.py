@@ -4,12 +4,13 @@ from langchain_community.document_loaders import (
     DirectoryLoader,
     CSVLoader
 )
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.text_splitter import (
+    RecursiveCharacterTextSplitter
+)
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain_community.vectorstores import Chroma
 from config.settings import settings
 import chromadb
-from chromadb.config import Settings as ChromaSettings
 import os
 
 class DocumentIngester:
@@ -26,38 +27,19 @@ class DocumentIngester:
         self.chroma_client = self._setup_chromadb()
 
     def _setup_chromadb(self):
-        """Setup ChromaDB client with tenant"""
-        client = chromadb.HttpClient(
-            host=settings.CHROMA_HOST,
-            port=settings.CHROMA_PORT,
-            settings=ChromaSettings(
-                anonymized_telemetry=False
-            )
-        )
-
-        # Create tenant if not exists
+        """Setup ChromaDB with v2 API"""
         try:
-            client.get_tenant(
-                name="default_tenant"
+            client = chromadb.HttpClient(
+                host=settings.CHROMA_HOST,
+                port=settings.CHROMA_PORT
             )
-        except Exception:
-            client.create_tenant(
-                name="default_tenant"
-            )
-
-        # Create database if not exists
-        try:
-            client.get_database(
-                name="default_database",
-                tenant="default_tenant"
-            )
-        except Exception:
-            client.create_database(
-                name="default_database",
-                tenant="default_tenant"
-            )
-
-        return client
+            # Test connection
+            client.heartbeat()
+            print("✅ ChromaDB connected!")
+            return client
+        except Exception as e:
+            print(f"❌ ChromaDB error: {e}")
+            raise e
 
     def load_documents(self, directory: str) -> list:
         """Load multiple document types"""
@@ -80,7 +62,10 @@ class DocumentIngester:
                 docs = loader.load()
                 if docs:
                     documents.extend(docs)
-                    print(f"✅ Loaded {len(docs)} docs")
+                    print(
+                        f"✅ Loaded {len(docs)} "
+                        f"docs with {glob_pattern}"
+                    )
             except Exception as e:
                 print(f"⚠️ Error loading: {e}")
 
@@ -96,7 +81,8 @@ class DocumentIngester:
             # Step 1: Load
             if progress_callback:
                 progress_callback(
-                    0.2, "📂 Loading documents..."
+                    0.2,
+                    "📂 Loading documents..."
                 )
             documents = self.load_documents(directory)
 
@@ -109,7 +95,8 @@ class DocumentIngester:
             # Step 2: Split
             if progress_callback:
                 progress_callback(
-                    0.4, "✂️ Splitting into chunks..."
+                    0.4,
+                    "✂️ Splitting into chunks..."
                 )
             chunks = self.text_splitter.split_documents(
                 documents
@@ -118,8 +105,10 @@ class DocumentIngester:
             # Step 3: Embed & Store
             if progress_callback:
                 progress_callback(
-                    0.6, "🔢 Creating embeddings..."
+                    0.6,
+                    "🔢 Creating embeddings..."
                 )
+
             Chroma.from_documents(
                 documents=chunks,
                 embedding=self.embeddings,
@@ -129,7 +118,8 @@ class DocumentIngester:
 
             if progress_callback:
                 progress_callback(
-                    1.0, "✅ Indexing complete!"
+                    1.0,
+                    "✅ Indexing complete!"
                 )
 
             return {

@@ -5,7 +5,6 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from config.settings import settings
 import chromadb
-from chromadb.config import Settings as ChromaSettings
 
 class RAGRetriever:
     def __init__(self):
@@ -22,38 +21,20 @@ class RAGRetriever:
         self.chain = self._setup_chain()
 
     def _setup_chromadb(self):
-        """Setup ChromaDB client with tenant"""
-        client = chromadb.HttpClient(
-            host=settings.CHROMA_HOST,
-            port=settings.CHROMA_PORT,
-            settings=ChromaSettings(
-                anonymized_telemetry=False
-            )
-        )
-
-        # Create tenant if not exists
+        """Setup ChromaDB with v2 API"""
         try:
-            client.get_tenant(
-                name="default_tenant"
+            # Use new ChromaDB client
+            client = chromadb.HttpClient(
+                host=settings.CHROMA_HOST,
+                port=settings.CHROMA_PORT
             )
-        except Exception:
-            client.create_tenant(
-                name="default_tenant"
-            )
-
-        # Create database if not exists
-        try:
-            client.get_database(
-                name="default_database",
-                tenant="default_tenant"
-            )
-        except Exception:
-            client.create_database(
-                name="default_database",
-                tenant="default_tenant"
-            )
-
-        return client
+            # Test connection
+            client.heartbeat()
+            print("✅ ChromaDB connected!")
+            return client
+        except Exception as e:
+            print(f"❌ ChromaDB error: {e}")
+            raise e
 
     def _setup_chain(self):
         """Setup RAG chain"""
