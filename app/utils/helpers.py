@@ -16,7 +16,7 @@ def check_ollama_connection() -> bool:
 def check_chromadb_connection() -> bool:
     """Check if ChromaDB is running"""
     try:
-        # ← Updated to v2 API
+        # Updated to v2 API ✅
         response = requests.get(
             f"http://{settings.CHROMA_HOST}:"
             f"{settings.CHROMA_PORT}/api/v2/heartbeat",

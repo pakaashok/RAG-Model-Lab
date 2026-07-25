@@ -19,7 +19,10 @@ class RAGRetriever:
         )
         self.chroma_client = chromadb.HttpClient(
             host=settings.CHROMA_HOST,
-            port=settings.CHROMA_PORT
+            port=settings.CHROMA_PORT,
+            settings=chromadb.Settings(
+                anonymized_telemetry=False
+            )   
         )
         self.chain = self._setup_chain()
 
