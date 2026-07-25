@@ -13,7 +13,9 @@ from config.settings import settings
 import chromadb
 import os
 
+
 class DocumentIngester:
+
     def __init__(self):
         self.embeddings = OllamaEmbeddings(
             base_url=settings.OLLAMA_HOST,
@@ -27,58 +29,20 @@ class DocumentIngester:
         self.chroma_client = self._setup_chromadb()
 
     def _setup_chromadb(self):
-        """Setup ChromaDB with tenant"""
+        """Setup ChromaDB client"""
         try:
-            # Step 1: Connect as admin client
-            admin_client = chromadb.AdminClient(
-                chromadb.Settings(
-                    chroma_api_impl="chromadb.api.fastapi.FastAPI",
-                    chroma_server_host=settings.CHROMA_HOST,
-                    chroma_server_http_port=settings.CHROMA_PORT
-                )
-            )
-
-            # Step 2: Create tenant if not exists
-            try:
-                admin_client.get_tenant(
-                    name="default_tenant"
-                )
-                print("✅ Tenant exists!")
-            except Exception:
-                admin_client.create_tenant(
-                    name="default_tenant"
-                )
-                print("✅ Tenant created!")
-
-            # Step 3: Create database if not exists
-            try:
-                admin_client.get_database(
-                    name="default_database",
-                    tenant="default_tenant"
-                )
-                print("✅ Database exists!")
-            except Exception:
-                admin_client.create_database(
-                    name="default_database",
-                    tenant="default_tenant"
-                )
-                print("✅ Database created!")
-
-            # Step 4: Connect as regular client
             client = chromadb.HttpClient(
                 host=settings.CHROMA_HOST,
-                port=settings.CHROMA_PORT,
-                tenant="default_tenant",
-                database="default_database"
+                port=settings.CHROMA_PORT
             )
-            print("✅ ChromaDB connected!")
+            client.heartbeat()
+            print("ChromaDB connected!")
             return client
-
         except Exception as e:
-            print(f"❌ ChromaDB error: {e}")
+            print("ChromaDB error: " + str(e))
             raise e
 
-    def load_documents(self, directory: str) -> list:
+    def load_documents(self, directory):
         """Load multiple document types"""
         documents = []
         loaders = {
@@ -98,25 +62,20 @@ class DocumentIngester:
                 if docs:
                     documents.extend(docs)
                     print(
-                        f"✅ Loaded {len(docs)} "
-                        f"docs with {glob_pattern}"
+                        "Loaded " + str(len(docs)) +
+                        " docs with " + glob_pattern
                     )
             except Exception as e:
-                print(f"⚠️ Error loading: {e}")
+                print("Error loading: " + str(e))
         return documents
 
-    def ingest(
-        self,
-        directory: str,
-        progress_callback=None
-    ) -> dict:
+    def ingest(self, directory, progress_callback=None):
         """Main ingestion pipeline"""
         try:
-            # Step 1: Load
             if progress_callback:
                 progress_callback(
                     0.2,
-                    "📂 Loading documents..."
+                    "Loading documents..."
                 )
             documents = self.load_documents(directory)
 
@@ -126,22 +85,21 @@ class DocumentIngester:
                     "error": "No documents found!"
                 }
 
-            # Step 2: Split
             if progress_callback:
                 progress_callback(
                     0.4,
-                    "✂️ Splitting into chunks..."
+                    "Splitting into chunks..."
                 )
             chunks = self.text_splitter.split_documents(
                 documents
             )
 
-            # Step 3: Embed & Store
             if progress_callback:
                 progress_callback(
                     0.6,
-                    "🔢 Creating embeddings..."
+                    "Creating embeddings..."
                 )
+
             Chroma.from_documents(
                 documents=chunks,
                 embedding=self.embeddings,
@@ -152,7 +110,7 @@ class DocumentIngester:
             if progress_callback:
                 progress_callback(
                     1.0,
-                    "✅ Indexing complete!"
+                    "Indexing complete!"
                 )
 
             return {

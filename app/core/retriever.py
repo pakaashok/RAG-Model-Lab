@@ -23,46 +23,30 @@ class RAGRetriever:
         self.chain = self._setup_chain()
 
     def _setup_chromadb(self):
+        """Setup ChromaDB client"""
         try:
-            admin_client = chromadb.AdminClient(
-                chromadb.Settings(
-                    chroma_api_impl="chromadb.api.fastapi.FastAPI",
-                    chroma_server_host=settings.CHROMA_HOST,
-                    chroma_server_http_port=settings.CHROMA_PORT
-                )
-            )
-            try:
-                admin_client.get_tenant(name="default_tenant")
-                print("Tenant exists")
-            except Exception:
-                admin_client.create_tenant(name="default_tenant")
-                print("Tenant created")
-            try:
-                admin_client.get_database(
-                    name="default_database",
-                    tenant="default_tenant"
-                )
-                print("Database exists")
-            except Exception:
-                admin_client.create_database(
-                    name="default_database",
-                    tenant="default_tenant"
-                )
-                print("Database created")
             client = chromadb.HttpClient(
                 host=settings.CHROMA_HOST,
-                port=settings.CHROMA_PORT,
-                tenant="default_tenant",
-                database="default_database"
+                port=settings.CHROMA_PORT
             )
-            print("ChromaDB connected")
+            client.heartbeat()
+            print("ChromaDB connected!")
             return client
         except Exception as e:
             print("ChromaDB error: " + str(e))
             raise e
 
     def _setup_chain(self):
-        prompt_template = "You are a helpful assistant.\nUse the context below to answer the question.\nIf answer is not in context say I cannot find this in the documents.\n\nContext:\n{context}\n\nQuestion: {question}\n\nAnswer:"
+        """Setup RAG chain"""
+        prompt_template = (
+            "You are a helpful assistant.\n"
+            "Use the context below to answer.\n"
+            "If not in context say: "
+            "I cannot find this in documents.\n\n"
+            "Context:\n{context}\n\n"
+            "Question: {question}\n\n"
+            "Answer:"
+        )
 
         prompt = PromptTemplate(
             template=prompt_template,
@@ -89,17 +73,24 @@ class RAGRetriever:
         )
 
     def query(self, question):
+        """Query the RAG system"""
         try:
             result = self.chain.invoke(
                 {"query": question}
             )
             sources = []
-            for doc in result.get("source_documents", []):
+            for doc in result.get(
+                "source_documents", []
+            ):
                 sources.append(
                     {
                         "content": doc.page_content,
-                        "source": doc.metadata.get("source", "Unknown"),
-                        "page": doc.metadata.get("page", "N/A")
+                        "source": doc.metadata.get(
+                            "source", "Unknown"
+                        ),
+                        "page": doc.metadata.get(
+                            "page", "N/A"
+                        )
                     }
                 )
             return {
