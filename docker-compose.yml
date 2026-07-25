@@ -1,9 +1,6 @@
 version: '3.8'
 
 services:
-  # ================================
-  # Ollama - Local LLM
-  # ================================
   ollama:
     image: ollama/ollama:latest
     container_name: rag-ollama
@@ -12,25 +9,19 @@ services:
     ports:
       - "11434:11434"
     restart: unless-stopped
-    # ← Remove health check completely
-    # Let rag-app wait using depends_on
 
-  # ================================
-  # ChromaDB - Vector Database
-  # ================================
   chromadb:
-    image: chromadb/chroma:latest
+    image: chromadb/chroma:0.5.23    # ← Pin version!
     container_name: rag-chromadb
     volumes:
       - chroma_data:/chroma/chroma
     ports:
       - "8000:8000"
+    environment:
+      - ALLOW_RESET=true
+      - ANONYMIZED_TELEMETRY=false
     restart: unless-stopped
-    # ← Remove health check completely
 
-  # ================================
-  # RAG App - Streamlit UI
-  # ================================
   rag-app:
     build: ./app
     container_name: rag-app
@@ -46,16 +37,14 @@ services:
       - CHROMA_HOST=chromadb
       - CHROMA_PORT=8000
     depends_on:
-      - ollama      # ← Simple depends_on
-      - chromadb    # ← No condition needed
+      - ollama
+      - chromadb
     restart: unless-stopped
 
-# ================================
-# Volumes
-# ================================
 volumes:
   ollama_data:
     name: rag_ollama_data
   chroma_data:
     name: rag_chroma_data
+
     
