@@ -16,9 +16,10 @@ def check_ollama_connection() -> bool:
 def check_chromadb_connection() -> bool:
     """Check if ChromaDB is running"""
     try:
+        # ← Updated to v2 API
         response = requests.get(
             f"http://{settings.CHROMA_HOST}:"
-            f"{settings.CHROMA_PORT}/api/v1/heartbeat",
+            f"{settings.CHROMA_PORT}/api/v2/heartbeat",
             timeout=5
         )
         return response.status_code == 200
@@ -49,7 +50,12 @@ def format_file_size(size_bytes: int) -> str:
 
 def get_document_count(directory: str) -> dict:
     """Count documents in directory"""
-    counts = {"pdf": 0, "txt": 0, "csv": 0, "total": 0}
+    counts = {
+        "pdf": 0,
+        "txt": 0,
+        "csv": 0,
+        "total": 0
+    }
     if not os.path.exists(directory):
         return counts
     for root, _, files in os.walk(directory):
