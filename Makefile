@@ -1,65 +1,45 @@
 .PHONY: setup start stop clean logs status pull-models restart
 
-# Default target when just typing "make"
-.DEFAULT_GOAL := help
-
-# Show help
-help:
-	@echo "🤖 Local RAG Lab - Commands:"
-	@echo ""
-	@echo "  make setup      - Initial setup"
-	@echo "  make start      - Start everything"
-	@echo "  make stop       - Stop everything"
-	@echo "  make restart    - Restart"
-	@echo "  make status     - Check status"
-	@echo "  make logs       - View logs"
-	@echo "  make clean      - Remove everything"
-	@echo "  make pull-models- Download models"
-	@echo ""
-
 # Setup environment
 setup:
-	@echo "🔧 Setting up..."
 	cp .env.example .env
 	mkdir -p documents/uploaded vectorstore
-	@echo "✅ Setup complete!"
+	@echo "Setup complete!"
 
-# Pull required models
+# Pull required models - FAST MODELS
 pull-models:
-	@echo "📥 Pulling Ollama models..."
-	@echo "   → nomic-embed-text (274MB)..."
+	@echo "Pulling embedding model (274MB)..."
 	docker exec rag-ollama ollama pull nomic-embed-text
-	@echo "   → mistral (4.1GB)..."
-	docker exec rag-ollama ollama pull mistral
-	@echo "✅ Models pulled!"
+	@echo "Pulling LLM model (2GB)..."
+	docker exec rag-ollama ollama pull llama3.2:3b
+	@echo "Models pulled!"
 
 # Start all services
 start:
-	@echo "🚀 Starting RAG Lab..."
+	@echo "Starting RAG Lab..."
 	docker compose up -d --build
-	@echo "⏳ Waiting for services (30s)..."
+	@echo "Waiting for services (30s)..."
 	sleep 30
 	@make pull-models
 	@echo ""
-	@echo "════════════════════════════════"
-	@echo "✅ RAG Lab is running!"
-	@echo "🌐 http://localhost:8501"
-	@echo "════════════════════════════════"
+	@echo "======================================"
+	@echo "RAG Lab is running!"
+	@echo "Open: http://localhost:8501"
+	@echo "======================================"
 
 # Stop all services
 stop:
-	@echo "🛑 Stopping RAG Lab..."
+	@echo "Stopping RAG Lab..."
 	docker compose down
-	@echo "✅ Stopped!"
+	@echo "Stopped!"
 
-# Clean everything (WARNING: deletes models & data)
+# Clean everything
 clean:
-	@echo "⚠️  WARNING: This deletes models & data!"
-	@echo "🧹 Cleaning up..."
+	@echo "Cleaning up..."
 	docker compose down -v
 	rm -rf vectorstore/*
 	rm -rf documents/uploaded/*
-	@echo "✅ Cleaned!"
+	@echo "Cleaned!"
 
 # View logs
 logs:
@@ -67,10 +47,10 @@ logs:
 
 # Check status
 status:
-	@echo "📊 Container Status:"
+	@echo "Containers:"
 	docker compose ps
 	@echo ""
-	@echo "📊 Model Status:"
+	@echo "Models:"
 	docker exec rag-ollama ollama list
 
 # Restart services

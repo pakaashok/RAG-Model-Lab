@@ -14,16 +14,20 @@ class RAGRetriever:
             base_url=settings.OLLAMA_HOST,
             model=settings.EMBEDDING_MODEL
         )
+        # Optimized for speed
         self.llm = Ollama(
             base_url=settings.OLLAMA_HOST,
             model=settings.LLM_MODEL,
-            temperature=0.1
+            temperature=0.1,
+            num_predict=256,
+            top_k=10,
+            top_p=0.9,
+            num_ctx=2048
         )
         self.chroma_client = self._setup_chromadb()
         self.chain = self._setup_chain()
 
     def _setup_chromadb(self):
-        """Setup ChromaDB client"""
         try:
             client = chromadb.HttpClient(
                 host=settings.CHROMA_HOST,
@@ -37,13 +41,10 @@ class RAGRetriever:
             raise e
 
     def _setup_chain(self):
-        """Setup RAG chain"""
+        # Short prompt for fast responses
         prompt_template = (
-            "You are a helpful assistant.\n"
-            "Use the context below to answer.\n"
-            "If not in context say: "
-            "I cannot find this in documents.\n\n"
-            "Context:\n{context}\n\n"
+            "Answer briefly based on context.\n\n"
+            "Context: {context}\n\n"
             "Question: {question}\n\n"
             "Answer:"
         )
@@ -73,7 +74,6 @@ class RAGRetriever:
         )
 
     def query(self, question):
-        """Query the RAG system"""
         try:
             result = self.chain.invoke(
                 {"query": question}
